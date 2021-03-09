@@ -4,7 +4,57 @@ The purpose of this project is to set-up, then test a RabbitMQ cluster.
 
 # Setup
 
-This set is for Windows servers running on Azure.
+This set is for Windows servers running on Azure. The fastest way to setup RabbitMQ for testing is with Docker:
+
+## RabbitMQ Node 1
+```
+docker run -d \
+    --hostname rabbitmq1 \
+    --name rabbitmq1 \
+    --publish 4369:4369 \
+    --publish 5671:5671 \
+    --publish 5672:5672 \
+    --publish 15671:15671 \
+    --publish 15672:15672 \
+    --publish 25672:25672 \
+    --volume=/Users/stevemitchell/Development/RabbitMQ/rabbitmqload-test/rabbitmq.config:/etc/rabbitmq/rabbitmq.config \
+    --volume=/Users/stevemitchell/Development/RabbitMQ/rabbitmqload-test/definitions.json:/etc/rabbitmq/definitions.json \
+    -e RABBITMQ_ERLANG_COOKIE=0b396ed8-8011-11eb-9439-0242ac130002 \
+    -e RABBITMQ_NODE_NAME=rabbitmq1 \
+    -e RABBITMQ_DEFAULT_USER=rabbit-admin \
+    -e RABBITMQ_DEFAULT_PASS=changeMe! \
+    rabbitmq:3-management
+```
+
+## RabbitMQ Node 2
+```
+docker run -d \
+    --hostname rabbitmq2 \
+    --name rabbitmq2 \
+    --volume=/Users/stevemitchell/Development/RabbitMQ/rabbitmqload-test/rabbitmq.config:/etc/rabbitmq/rabbitmq.config \
+    --volume=/Users/stevemitchell/Development/RabbitMQ/rabbitmqload-test/definitions.json:/etc/rabbitmq/definitions.json \
+    -e RABBITMQ_ERLANG_COOKIE=0b396ed8-8011-11eb-9439-0242ac130002 \
+    -e RABBITMQ_NODE_NAME=rabbitmq2 \
+    --link=rabbitmq1:rabbitmq1 \
+    rabbitmq:3-management
+```
+
+
+## RabbitMQ Node 3
+```
+docker run -d \
+    --hostname rabbitmq3 \
+    --name rabbitmq3 \
+    --volume=/Users/stevemitchell/Development/RabbitMQ/rabbitmqload-test/rabbitmq.config:/etc/rabbitmq/rabbitmq.config \
+    --volume=/Users/stevemitchell/Development/RabbitMQ/rabbitmqload-test/definitions.json:/etc/rabbitmq/definitions.json \
+    -e RABBITMQ_ERLANG_COOKIE=0b396ed8-8011-11eb-9439-0242ac130002 \
+    -e RABBITMQ_NODE_NAME=rabbitmq3 \
+    --link=rabbitmq1:rabbitmq1 \
+    --link=rabbitmq2:rabbitmq2
+    rabbitmq:3-management
+```
+
+You can then go to http://localhost:8080 or http://host-ip:8080 in a browser and use the credentials guest/guest
 
 ## Install Erlang
 
@@ -74,3 +124,12 @@ Setting tags for user ”admin" to [administrator] ...
 rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
 Setting permissions for user ”admin" in vhost "/" ...
 ```
+
+----
+# References
+* [RabbitMQ - Clustering Guide](https://www.rabbitmq.com/clustering.html)
+* [RabbitMQ - Downloading and Installing RabbitMQ](https://www.rabbitmq.com/download.html)
+* [Erlang - Installation Guide](https://erlang.org/doc/installation_guide/users_guide.html)
+* [RabbitMQ - Installing on Windows](https://www.rabbitmq.com/install-windows.html)
+* [Dave Donaldson - Installing RabbitMQ on Windows](http://arcware.net/installing-rabbitmqon-windows/)
+
