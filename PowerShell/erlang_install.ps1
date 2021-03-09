@@ -8,7 +8,7 @@ $DOWNLOAD_PATH = $HOME + "\" + $ERLANG_VERSION
 #
 $erlangkey = Get-ChildItem HKLM:\SOFTWARE\Wow6432Node\Ericsson\Erlang -ErrorAction SilentlyContinue
 if ( $erlangkey -eq $null ) {
-	Write-Host "Erlang not found, need to install it"
+	Write-Host "Downloading Erlang"
 	$WebClient = New-Object System.Net.WebClient
 	$WebClient.DownloadFile($ERLANG_URL, $ERLANG_VERSION)
 	Start-Process -Wait $DOWNLOAD_PATH  /S
@@ -32,5 +32,9 @@ if (!$system_path_elems.Contains("%ERLANG_HOME%\bin") -and !$system_path_elems.C
 }
 
 # We should test if Erlang exists.
-$GetRule =  Get-NetFirewallRule -DisplayName "Erlang"
-New-NetFirewallRule  -program $ERLANG_HOME + "\bin\erl.exe" -Profile @('Domain', 'Private', 'Public') -Action Allow -Name "Erlang" -DisplayName "Erlang"
+$erlangRule =  Get-NetFirewallRule -DisplayName "Erlang"
+if (!$erlangRule)
+{
+	Write-Host "Adding Erlang programming rule"
+	New-NetFirewallRule  -program $ERLANG_HOME + "\bin\erl.exe" -Profile @('Domain', 'Private', 'Public') -Action Allow -Name "Erlang" -DisplayName "Erlang"
+}
