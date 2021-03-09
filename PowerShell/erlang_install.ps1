@@ -31,7 +31,7 @@ if (!$system_path_elems.Contains("%ERLANG_HOME%\bin") -and !$system_path_elems.C
     [System.Environment]::SetEnvironmentVariable("PATH", $newpath, "Machine")
 }
 
-# We should test if Erlang exists.
+# Add Erlang firewall rule if it is needed.
 $erlangRule =  Get-NetFirewallRule -DisplayName "Erlang"
 if (!$erlangRule)
 {
