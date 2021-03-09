@@ -1,4 +1,8 @@
 # SOURCE = https://gist.github.com/chgeuer/8342314
+# VARS
+$ERLANG_VERSION = "otp_win64_23.2.exe"
+$ERLANG_URL = "http://erlang.org/download/" + $ERLANG_VERSION
+$DOWNLOAD_PATH = $HOME + "\" + $ERLANG_VERSION
 #
 # Check if Erlang is installed
 #
@@ -6,8 +10,8 @@ $erlangkey = Get-ChildItem HKLM:\SOFTWARE\Wow6432Node\Ericsson\Erlang -ErrorActi
 if ( $erlangkey -eq $null ) {
 	Write-Host "Erlang not found, need to install it"
 	$WebClient = New-Object System.Net.WebClient
-	$WebClient.DownloadFile("http://erlang.org/download/otp_win64_23.2.exe", "C:\Users\smitchell\otp_win64_23.2.exe")
-	Start-Process -Wait otp_win64_23.2.exe /S
+	$WebClient.DownloadFile($ERLANG_URL, $ERLANG_VERSION)
+	Start-Process -Wait $DOWNLOAD_PATH  /S
 }
 
 #
@@ -29,4 +33,4 @@ if (!$system_path_elems.Contains("%ERLANG_HOME%\bin") -and !$system_path_elems.C
 
 # We should test if Erlang exists.
 $GetRule =  Get-NetFirewallRule -DisplayName "Erlang"
-New-NetFirewallRule  -program "%ProgramFiles%\erl-23.2.7\bin\erl.exe" -Profile @('Domain', 'Private', 'Public') -Action Allow -Name "Erlang" -DisplayName "Erlang"
+New-NetFirewallRule  -program $ERLANG_HOME + "\bin\erl.exe" -Profile @('Domain', 'Private', 'Public') -Action Allow -Name "Erlang" -DisplayName "Erlang"
