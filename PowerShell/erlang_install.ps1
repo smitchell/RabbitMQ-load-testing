@@ -1,8 +1,7 @@
-# SOURCE = https://gist.github.com/chgeuer/8342314
 # VARS
 $ERLANG_VERSION = "otp_win64_23.2.exe"
 $ERLANG_URL = "http://erlang.org/download/" + $ERLANG_VERSION
-$DOWNLOAD_PATH = $HOME + "\" + $ERLANG_VERSION
+$DOWNLOAD_PATH = $env:TEMP  + "\" + $ERLANG_VERSION
 #
 # Check if Erlang is installed
 #
@@ -11,7 +10,7 @@ if ( $erlangkey -eq $null ) {
 	Write-Host "Downloading Erlang"
 	$WebClient = New-Object System.Net.WebClient
 	$WebClient.DownloadFile($ERLANG_URL, $ERLANG_VERSION)
-	Start-Process -Wait $DOWNLOAD_PATH  /S
+#	Start-Process -Wait $DOWNLOAD_PATH  /S
 }
 
 #
