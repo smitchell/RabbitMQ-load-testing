@@ -19,7 +19,7 @@ $uat_user = "uat_admin"
 $config_access = ".*"
 $write_access = ".*"
 $read_access = ".*"
-$rabbit_host = "http://localhost"
+$rabbitmq_url = "http://localhost:15672"
 
 Write-Host "Generating passwords."
 Add-Type -AssemblyName System.Web
@@ -60,8 +60,8 @@ Write-Host "Setting up uat vHost."
 ./rabbitmqctl set_user_tags $uat_user "administrator"
 ./rabbitmqctl set_permissions -p "uat" $uat_user $config_access $write_access $read_access
 
-Write-Host "$admin_user password = $admin_password"
-Write-Host "$dev_user password = $dev_admin"
-Write-Host "$qa_user password = $qa_password"
-Write-Host "$uat_user password = $uat_password"
-Write-Host "$rabbit_host:15672"
+Write-Host "$admin_user password = '$admin_password'"
+Write-Host "$dev_user password = '$dev_password'"
+Write-Host "$qa_user password = '$qa_password'"
+Write-Host "$uat_user password = '$uat_password'"
+Write-Host "$rabbitmq_url"
