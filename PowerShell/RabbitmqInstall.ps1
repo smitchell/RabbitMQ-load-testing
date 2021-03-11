@@ -8,7 +8,6 @@ AUTHOR:  Steve Mitchell
 DATE:    3/9/2021
 Version: 1.0
 =======================================================================================
-
 #>
 
 # Configurable settings.
@@ -40,7 +39,7 @@ if (!$systemPathElems.Contains("$ERLANG_HOME\bin") -and !$systemPathElems.Contai
 	[System.Environment]::SetEnvironmentVariable("PATH", $newPath, "Machine")
 }
 
-# Create a firewall rules if needed.
+# Create firewall rules if needed.
 $firewallRule =  Get-NetFirewallRule -DisplayName "Erlang" -ErrorAction SilentlyContinue
 if ($null -eq $firewallRule) {
 	Write-Host "Creating firewall rule for Erlang." -ForegroundColor Yellow
@@ -61,7 +60,6 @@ if ($null -eq $firewallRule) {
 
 # Check if RabbitMQ is installed.
 $rabbitHome = "C:\Program Files\RabbitMQ Server\rabbitmq_server-$rabbitVersion"
-
 if (!(Test-Path "$rabbitHome\sbin\rabbitmq-server.bat" -PathType Leaf))
 {
 	$webClient = New-Object System.Net.WebClient
@@ -72,7 +70,7 @@ if (!(Test-Path "$rabbitHome\sbin\rabbitmq-server.bat" -PathType Leaf))
 	Wait-Process -Id $proc.Id
 }
 
-# Create a firewall rules if needed.
+# Create firewall rules if needed.
 $firewallRule =  Get-NetFirewallRule -DisplayName "RabbitMQ" -ErrorAction SilentlyContinue
 if ($null -eq $firewallRule) {
 	Write-Host "Creating firewall rule for RabbitMQ." -ForegroundColor Yellow
