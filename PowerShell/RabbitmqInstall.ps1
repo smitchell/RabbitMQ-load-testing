@@ -27,7 +27,7 @@ if ($null -eq $erlangkey) {
 
 # Set the Erlang home path.
 $ERLANG_HOME = ((Get-ChildItem HKLM:\SOFTWARE\Wow6432Node\Ericsson\Erlang)[0] | Get-ItemProperty)."(default)"
-[System.Environment]::SetEnvironmentVariable("ERLANG_HOME", $ERLANG_HOME , "Machine")
+[System.Environment]::SetEnvironmentVariable("ERLANG_HOME", $ERLANG_HOME , [System.EnvironmentVariableTarget]::Machine)
 
 # Add Erlang to the Path if needed.
 $systemPath = [System.Environment]::GetEnvironmentVariable("PATH", "Machine")
@@ -36,7 +36,7 @@ if (!$systemPathElems.Contains("$ERLANG_HOME\bin") -and !$systemPathElems.Contai
 {
 	Write-Host "Adding Erlang to path."
 	$newPath = $systemPath.Trim(";") + ";$ERLANG_HOME\bin"
-	[System.Environment]::SetEnvironmentVariable("PATH", $newPath, "Machine")
+	[System.Environment]::SetEnvironmentVariable("PATH", $newPath, [System.EnvironmentVariableTarget]::Machine)
 }
 
 # Create firewall rules if needed.
