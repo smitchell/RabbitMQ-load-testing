@@ -13,14 +13,13 @@ Version: 1.0
 
 # Configurable settings.
 $erlVersion = "23.2"
-$ertsVersion = "11.1.4"
 $erlangInstallFile = "otp_win64_$erlVersion.exe"
 $rabbitVersion = "3.8.14"
 $rabbitInstaller = "rabbitmq-server-$rabbitVersion.exe"
 
 # Check if Erlang is installed.
 $erlangkey = Get-ChildItem HKLM:\SOFTWARE\Wow6432Node\Ericsson\Erlang -ErrorAction SilentlyContinue
-if ($erlangkey -eq $null) {
+if ($null -eq $erlangkey) {
 	$webClient = New-Object System.Net.WebClient
 	Write-Host "Downloading and installing Erlang." -ForegroundColor Yellow
 	$webClient.DownloadFile("https://erlang.org/download/" + $erlangInstallFile, $env:TEMP + "\" + $erlangInstallFile)
@@ -43,19 +42,19 @@ if (!$systemPathElems.Contains("$ERLANG_HOME\bin") -and !$systemPathElems.Contai
 
 # Create a firewall rules if needed.
 $firewallRule =  Get-NetFirewallRule -DisplayName "Erlang" -ErrorAction SilentlyContinue
-if ($firewallRule -eq $null) {
+if ($null -eq $firewallRule) {
 	Write-Host "Creating firewall rule for Erlang." -ForegroundColor Yellow
 	New-NetFirewallRule -Group "Erlang" -Program "$ERLANG_HOME\bin\erl.exe" -Profile @("Domain", "Private", "Public") -Action Allow -Name "Erlang" -DisplayName "Erlang"
 }
 
 $firewallRule =  Get-NetFirewallRule -DisplayName "Erlang Run-time System" -ErrorAction SilentlyContinue
-if ($firewallRule -eq $null) {
+if ($firewallRule) {
 	Write-Host "Creating firewall rule for Erlang Run-time System." -ForegroundColor Yellow
 	New-NetFirewallRule -Group "Erlang" -Program "$ERLANG_HOME\erts-{ertsVersion}\bin\erl.exe" -Profile @("Domain", "Private", "Public") -Action Allow -Name "Erlang Run-time System" -DisplayName "Erlang Run-time System"
 }
 
 $firewallRule =  Get-NetFirewallRule -DisplayName "Erlang Port Mapper Daemon" -ErrorAction SilentlyContinue
-if ($firewallRule -eq $null) {
+if ($null -eq $firewallRule) {
 	Write-Host "Creating firewall rule for Erlang Run-time System." -ForegroundColor Yellow
 	New-NetFirewallRule -Group "Erlang" -Program "$ERLANG_HOME\erts-{ertsVersion}\bin\epmd.exe" -Profile @("Domain", "Private", "Public") -Action Allow -Name "Erlang Port Mapper Daemon" -DisplayName "Erlang Port Mapper Daemon"
 }
@@ -75,10 +74,7 @@ if (!(Test-Path "$rabbitHome\sbin\rabbitmq-server.bat" -PathType Leaf))
 
 # Create a firewall rules if needed.
 $firewallRule =  Get-NetFirewallRule -DisplayName "RabbitMQ" -ErrorAction SilentlyContinue
-if ($firewallRule -eq $null) {
+if ($null -eq $firewallRule) {
 	Write-Host "Creating firewall rule for RabbitMQ." -ForegroundColor Yellow
 	New-NetFirewallRule -Name 'RabbitMQ' -DisplayName 'RabbitMQ' -Profile @('Domain', 'Private', 'Public') -Direction Inbound -Action Allow -Protocol TCP -LocalPort @('5672', '15672')
 }
-
-cd "$rabbitHome\sbin\"
-./rabbitmq-plugins enable rabbitmq_management

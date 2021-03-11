@@ -58,7 +58,7 @@ You can then go to http://localhost:8080 or http://host-ip:8080 in a browser and
 
 ## Install Erlang
 
-[Download Erlang](https://www.erlang.org/downloads) and run the the installation. Accept the default values.
+[Download Erlang](https://www.erlang.org/downloads) and run the installation. Accept the default values.
 
 Open the Erland ports, in the case of Windows, add the following firewall rules:
 
@@ -114,16 +114,39 @@ rabbit_plugins enable rabbitmq_management
 
 ```
 cd C:\Program Files\RabbitMQ Server\rabbitmq_server-3.8.14\sbin
-rabbitmqctl add_user admin [THE PASSWORD]
+./rabbitmqctl add_user "admin" "changeme"
 Adding user "admin" ...
 Done. Don't forget to grant the user permissions to some virtual hosts! See 'rabbitmqctl help set_permissions' to learn more.
 
-rabbitmqctl set_user_tags test administrator
+./rabbitmqctl set_user_tags ”admin" "administrator"
 Setting tags for user ”admin" to [administrator] ...
 
-rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
+./rabbitmqctl set_permissions -p / "admin" ".*" ".*" ".*"
 Setting permissions for user ”admin" in vhost "/" ...
 ```
+
+## Setup Environments
+
+
+## Setup Test
+./rabbitmqctl add_vhost "test"
+./rabbitmqctl add_user "test_admin" "54f0419bed25491694087067683a9eec"
+./rabbitmqctl set_user_tags ”test_admin" "administrator"
+./rabbitmqctl set_permissions -p "test" "test_admin" ".*" ".*" ".*"
+
+
+## Setup qa
+./rabbitmqctl add_vhost "qa"
+./rabbitmqctl add_user "qa_admin" "d5d3d44d469a47d5ad0d1a600e9b41f3"
+./rabbitmqctl set_user_tags ”qa_admin" "administrator"
+./rabbitmqctl set_permissions -p "qa" "qa_admin" ".*" ".*" ".*"
+
+## Setup uat
+./rabbitmqctl add_vhost "uat"
+./rabbitmqctl add_user "uat_admin" "6f786ecdd4cd45b2bc6223b35f242e6a"
+./rabbitmqctl set_user_tags ”uat_admin" "administrator"
+./rabbitmqctl set_permissions -p "uat" "uat_admin" ".*" ".*" ".*"
+
 
 ----
 # References
