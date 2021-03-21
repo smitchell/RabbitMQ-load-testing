@@ -23,15 +23,15 @@ $rabbitmq_url = "http://localhost:15672"
 
 Write-Host "Generating passwords."
 Add-Type -AssemblyName System.Web
-$admin_password = [System.Web.Security.Membership]::GeneratePassword(15,0)
-$dev_password = [System.Web.Security.Membership]::GeneratePassword(15,0)
-$qa_password = [System.Web.Security.Membership]::GeneratePassword(15,0)
-$uat_password = [System.Web.Security.Membership]::GeneratePassword(15,0)
+$admin_password = ([char[]]([char]'a'..[char]'z') + 0..9 | sort {get-random})[0..15] -join ''
+$dev_password = ([char[]]([char]'a'..[char]'z') + 0..9 | sort {get-random})[0..15] -join ''
+$qa_password = ([char[]]([char]'a'..[char]'z') + 0..9 | sort {get-random})[0..15] -join ''
+$uat_password = ([char[]]([char]'a'..[char]'z') + 0..9 | sort {get-random})[0..15] -join ''
 
 # Enable RabbitMQ Management Plugins.
 Write-Host "Enabling RabbitMQ management plugins."
 Set-Location -Path "$rabbitHome\sbin\"
-./rabbitmq-plugins enable rabbitmq_top
+./rabbitmq-plugins enable rabbitmq_management rabbitmq_auth_backend_ldap
 
 # Setup the Admin user.
 Write-Host "Creating the admin user."
@@ -65,3 +65,10 @@ Write-Host "$dev_user password = '$dev_password'"
 Write-Host "$qa_user password = '$qa_password'"
 Write-Host "$uat_user password = '$uat_password'"
 Write-Host "$rabbitmq_url"
+
+Write-Host "***   SAVE THESE USER IDS AND PASSWORDS   ***" -ForegroundColor Yellow
+Write-Host "$admin_user password = $admin_password" -ForegroundColor Yellow
+Write-Host "$dev_user password = $dev_password" -ForegroundColor Yellow
+Write-Host "$qa_user password = $qa_password" -ForegroundColor Yellow
+Write-Host "$uat_user password = $uat_password" -ForegroundColor Yellow
+

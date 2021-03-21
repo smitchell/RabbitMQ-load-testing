@@ -42,19 +42,19 @@ if (!$systemPathElems.Contains("$ERLANG_HOME\bin") -and !$systemPathElems.Contai
 # Create firewall rules if needed.
 $firewallRule =  Get-NetFirewallRule -DisplayName "Erlang" -ErrorAction SilentlyContinue
 if ($null -eq $firewallRule) {
-	Write-Host "Creating firewall rule for Erlang." -ForegroundColor Yellow
+	Write-Host "Creating firewall rule for Erlang."
 	New-NetFirewallRule -Group "Erlang" -Program "$ERLANG_HOME\bin\erl.exe" -Profile @("Domain", "Private", "Public") -Action Allow -Name "Erlang" -DisplayName "Erlang"
 }
 
 $firewallRule =  Get-NetFirewallRule -DisplayName "Erlang Run-time System" -ErrorAction SilentlyContinue
 if ($firewallRule) {
-	Write-Host "Creating firewall rule for Erlang Run-time System." -ForegroundColor Yellow
+	Write-Host "Creating firewall rule for Erlang Run-time System."
 	New-NetFirewallRule -Group "Erlang" -Program "$ERLANG_HOME\erts-{ertsVersion}\bin\erl.exe" -Profile @("Domain", "Private", "Public") -Action Allow -Name "Erlang Run-time System" -DisplayName "Erlang Run-time System"
 }
 
 $firewallRule =  Get-NetFirewallRule -DisplayName "Erlang Port Mapper Daemon" -ErrorAction SilentlyContinue
 if ($null -eq $firewallRule) {
-	Write-Host "Creating firewall rule for Erlang Run-time System." -ForegroundColor Yellow
+	Write-Host "Creating firewall rule for Erlang Run-time System."
 	New-NetFirewallRule -Group "Erlang" -Program "$ERLANG_HOME\erts-{ertsVersion}\bin\epmd.exe" -Profile @("Domain", "Private", "Public") -Action Allow -Name "Erlang Port Mapper Daemon" -DisplayName "Erlang Port Mapper Daemon"
 }
 
@@ -63,7 +63,7 @@ $rabbitHome = "C:\Program Files\RabbitMQ Server\rabbitmq_server-$rabbitVersion"
 if (!(Test-Path "$rabbitHome\sbin\rabbitmq-server.bat" -PathType Leaf))
 {
 	$webClient = New-Object System.Net.WebClient
-	Write-Host "Downloading and installing RabbitMQ." -ForegroundColor Yellow
+	Write-Host "Downloading and installing RabbitMQ."
 	$webClient.DownloadFile("https://github.com/rabbitmq/rabbitmq-server/releases/download/v$rabbitVersion/$rabbitInstaller", $env:TEMP + "\" + $rabbitInstaller)
 
 	$proc = Start-Process ($env:TEMP + "\" + $rabbitInstaller) /S -Wait:$false -Passthru
@@ -73,6 +73,13 @@ if (!(Test-Path "$rabbitHome\sbin\rabbitmq-server.bat" -PathType Leaf))
 # Create firewall rules if needed.
 $firewallRule =  Get-NetFirewallRule -DisplayName "RabbitMQ" -ErrorAction SilentlyContinue
 if ($null -eq $firewallRule) {
-	Write-Host "Creating firewall rule for RabbitMQ." -ForegroundColor Yellow
+	Write-Host "Creating firewall rule for RabbitMQ."
 	New-NetFirewallRule -Name 'RabbitMQ' -DisplayName 'RabbitMQ' -Profile @('Domain', 'Private', 'Public') -Direction Inbound -Action Allow -Protocol TCP -LocalPort @('5672', '15672')
 }
+
+Write-Host "*************************************************************" -ForegroundColor Yellow
+Write-Host "***                                                       ***" -ForegroundColor Yellow
+Write-Host "***    Closs this PowerShell window and open a new one    ***" -ForegroundColor Yellow
+Write-Host "***    before running the RabbitMQ Configuration shell.   ***" -ForegroundColor Yellow
+Write-Host "***                                                       ***" -ForegroundColor Yellow
+Write-Host "*************************************************************" -ForegroundColor Yellow
