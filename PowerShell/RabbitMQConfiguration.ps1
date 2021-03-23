@@ -31,7 +31,7 @@ $uat_password = ([char[]]([char]'a'..[char]'z') + 0..9 | sort {get-random})[0..1
 # Enable RabbitMQ Management Plugins.
 Write-Host "Enabling RabbitMQ management plugins."
 Set-Location -Path "$rabbitHome\sbin\"
-./rabbitmq-plugins enable rabbitmq_management rabbitmq_auth_backend_ldap
+./rabbitmq-plugins enable rabbitmq_management rabbitmq_auth_backend_ldap rabbitmq_top
 
 # Setup the Admin user.
 Write-Host "Creating the admin user."
