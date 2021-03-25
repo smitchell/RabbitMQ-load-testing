@@ -39,6 +39,10 @@ Write-Host "Creating the admin user."
 ./rabbitmqctl set_user_tags $admin_user "administrator"
 ./rabbitmqctl set_permissions -p "/" "admin" $config_access $write_access $read_access
 
+# Delete the Guest user
+Write-Host "Deleting the guest user."
+./rabbitmqctl delete_user "guest”
+
 # Create the vHosts.
 Write-Host "Setting up dev vHost."
 ./rabbitmqctl add_vhost "dev"
