@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.config;
 
+import com.example.demo.services.ConsumerService;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -12,18 +13,18 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfig {
-    static final String topicExchangeName = "amq.topic";
+    public static final String TOPIC_EXCHANGE = "amq.topic";
 
-    static final String queueName = "load-test";
+    public static final String QUEUE_NAME = "load-test";
 
     @Bean
     Queue queue() {
-        return new Queue(queueName, false);
+        return new Queue(QUEUE_NAME, false);
     }
 
     @Bean
     TopicExchange exchange() {
-        return new TopicExchange(topicExchangeName);
+        return new TopicExchange(TOPIC_EXCHANGE);
     }
 
     @Bean
@@ -36,13 +37,13 @@ public class RabbitConfig {
                                              MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
+        container.setQueueNames(QUEUE_NAME);
         container.setMessageListener(listenerAdapter);
         return container;
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapter(Consumer consumer) {
-        return new MessageListenerAdapter(consumer, "receiveMessage");
+    MessageListenerAdapter listenerAdapter(ConsumerService consumerService) {
+        return new MessageListenerAdapter(consumerService, "receiveMessage");
     }
 }
