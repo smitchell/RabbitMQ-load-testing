@@ -1,6 +1,10 @@
 # RabbitMQ Load Testing
 
-The purpose of this project is to set-up, then test a RabbitMQ cluster.
+The purpose of this project is to set-up, then test a RabbitMQ cluster. Testing is done via Spring AMQP. Their is an AMQP Plugin for JMeter but it isn't fully functional.
+
+In also includes PowerShell scripts and config files for a single node RabbitMQ Installation integraded with Active Directory. The details are in two directories:
+* PowerShell
+* configs
 
 # Setup
 
